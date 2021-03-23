@@ -59,4 +59,27 @@ use function {{plugin_namespace}}\plugin as {{plugin_namespace}};
 
 You can then reference the specific instance of your plugin by calling `{{plugin_namespace}}();` from anywhere within that file;
 
+### Example:
+
+> For our example, we're going to assume our `{{plugin_namespace}}` is `DirewolfDesign`.
+
+At the top of our `functions.php` file:
+```
+<?php
+/* Standard PHP header stuff here... */
+
+use function DirewolfDesign\plugin as DirewolfDesign;
+
+...
+// Usual functions.php type stuff here...
+...
+
+function get_plugin_icons() {
+    // Get the icons associated with the DirewolfDesign plugin
+    $icons = DirewolfDesign()->icons;
+    return $icons;
+}
+
+```
+
 ***Full Readme coming soon...***
