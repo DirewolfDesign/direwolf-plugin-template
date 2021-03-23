@@ -1,5 +1,17 @@
 <?php
 /**
+* WordPress Plugin Template by Direwolf Design
+*
+* PHP version 7
+*
+* @package     DirewolfPluginTemplate
+* @author      Direwolf Design <developers@direwolfdesign.co>
+* @version     0.1.0-alpha
+* @link        https://github.com/DirewolfDesign/direwolf-plugin-template
+*/
+
+/**
+ * @wordpress-header
  * Plugin Name: plugin_name
  * Description: plugin_description
  * Version:     plugin_version
@@ -8,8 +20,6 @@
  * License:     plugin_license
  * License URI: plugin_license_uri
  * Text Domain: plugin_text_domain
- *
- * @package     plugin_namespace
  */
 
 namespace plugin_namespace;
