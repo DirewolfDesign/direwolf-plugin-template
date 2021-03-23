@@ -1,14 +1,14 @@
 <?php
 /**
-* WordPress Plugin Template by Direwolf Design
-*
-* PHP version 7
-*
-* @package     DirewolfPluginTemplate
-* @author      Direwolf Design <developers@direwolfdesign.co>
-* @version     0.1.0-alpha
-* @link        https://github.com/DirewolfDesign/direwolf-plugin-template
-*/
+ * WordPress Plugin Template by Direwolf Design
+ *
+ * PHP version 7
+ *
+ * @package     DirewolfPluginTemplate
+ * @author      Direwolf Design <developers@direwolfdesign.co>
+ * @version     0.1.0-alpha
+ * @link        https://github.com/DirewolfDesign/direwolf-plugin-template
+ */
 
 /**
  * @wordpress-header
