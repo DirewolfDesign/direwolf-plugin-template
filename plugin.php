@@ -53,7 +53,6 @@ if( ! class_exists( 'plugin_namespace' ) ) :
           */
          public $plugin_url;
 
-
          /**
           * An array of dynamic methods created when loading in
           * sub-classes to make calling them externally easier.
