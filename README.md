@@ -43,6 +43,8 @@ Once uploaded to your WordPress install, activate your plugin through the `wp-ad
 
 ## Things To Note...
 
+### Plugin Namespacing
+
 > If you haven't used PHP namespaces before we recommend you read up on them before diving too deeply into the plugin code, although most of what you'll need to know will be added to our Documentation when it's ready.
 
 Each generated plugin is contained within it's own `namespace`, this allows the installer to use the same base code for each plugin without having to carry out too many rewrites while generating the core plugin code.
@@ -59,7 +61,7 @@ use function {{plugin_namespace}}\plugin as {{plugin_namespace}};
 
 You can then reference the specific instance of your plugin by calling `{{plugin_namespace}}();` from anywhere within that file;
 
-### Example:
+#### Example:
 
 > For our example, we're going to assume our `{{plugin_namespace}}` is `DirewolfDesign`.
 
@@ -81,6 +83,16 @@ function get_plugin_icons() {
 }
 ```
 
-As you can see, we're simply mapping our namespaced `plugin()` function into an accessible function outside the `DirewolfDesign` namespace by telling PHP to `use function` followed by our namespace (`DirewolfDesign`) and the name of the function we want to call (`plugin`); 
+As you can see, we're simply mapping our namespaced `plugin()` function into an accessible function outside the `DirewolfDesign` namespace by telling PHP to `use function` followed by our namespace (`DirewolfDesign`) and the name of the function we want to call (`plugin`);
+
+### Function Overrides
+
+Some of the default WordPress functions you're used to will have been overridden by the plugin namespace. Before you panic, we haven't changed anything! You can still call all of these functions as you normally would, but any that are called from within your plugin's `namespace` will use the override version defined by your plugin.
+
+The reason we do this is to make it easier for you to do things like registering Custom Post Types, Admin Pages and other plugin related stuff and have the plugin class track what's being registered when so there's less logic for you to have to worry about.
+
+All of the core classes that ship with your plugin will make use of these override functions in various ways, so you can continue developing as usual and the plugin system will handle everything in the background.
+
+> We'll provide an example of this soon!
 
 ***Full Readme coming soon...***
