@@ -79,7 +79,8 @@ function get_plugin_icons() {
     $icons = DirewolfDesign()->icons;
     return $icons;
 }
-
 ```
+
+As you can see, we're simply mapping our namespaced `plugin()` function into an accessible function outside the `DirewolfDesign` namespace by telling PHP to `use function` followed by our namespace (`DirewolfDesign`) and the name of the function we want to call (`plugin`); 
 
 ***Full Readme coming soon...***
