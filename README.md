@@ -17,6 +17,18 @@
 
 ---
 
+## The Concept
+
+**The concept for this package is to create a (fairly) standardised plugin template that can be used to instantiate as many WordPress plugins as you need.**
+
+Essentially, you can download the base plugin template, run an installer script from your command line and generate a new plugin in a familiar format, with all of the base requirements and dependencies ready for you to use.
+
+We're making heavy use of PHP 7s namespacing feature to allow for very simple function and class names as well as powering some function overloads without interfering with other themes / plugins that make use of WordPress' native functionality.
+
+> This is still very much an experimental package and is a work in progress. You're welcome to submit a pull request if you have any tweaks / features you think would fit the template, otherwise feel free to clone/fork the repo and create your own template system. The `install` file is fairly self-explanatory at this stage and is heavily commented, so making modifications to suit your own needs should be pretty straight forward.
+
+---
+
 ## Getting Started
 
 To get started, clone or download the repo to your local machine and open the plugin directory in your favourite IDE.
