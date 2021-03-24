@@ -12,26 +12,26 @@
 
 /**
  * @wordpress-header
- * Plugin Name: plugin_name
- * Description: plugin_description
- * Version:     plugin_version
- * Author:      plugin_author <plugin_author_email>
- * Author URI:  plugin_author_uri
- * License:     plugin_license
- * License URI: plugin_license_uri
- * Text Domain: plugin_text_domain
+ * Plugin Name: {{plugin_name}}
+ * Description: {{plugin_description}}
+ * Version:     {{plugin_version}}
+ * Author:      {{plugin_author}} <{{plugin_author_email}}>
+ * Author URI:  {{plugin_author_uri}}
+ * License:     {{plugin_license}}
+ * License URI: {{plugin_license_uri}}
+ * Text Domain: {{plugin_text_domain}}
  */
 
-namespace plugin_namespace;
+namespace {{plugin_namespace}};
 
 if( ! defined( 'ABSPATH' ) ) wp_die( 'End of Line, Man' );
 
-if( ! class_exists( 'plugin_namespace' ) ) :
+if( ! class_exists( '{{plugin_namespace}}' ) ) :
 
     /**
      * Main Plugin Class
      */
-     class plugin_namespace {
+     class {{plugin_namespace}} {
 
          /**
           * The single class instance.
@@ -75,7 +75,7 @@ if( ! class_exists( 'plugin_namespace' ) ) :
          private $plugin_methods = array();
 
          /**
-          * plugin_namespace constructor.
+          * {{plugin_namespace}} constructor.
           */
          public function __construct() {
              /* We do nothing here! */
@@ -108,7 +108,7 @@ if( ! class_exists( 'plugin_namespace' ) ) :
          public function activation_hook() {
              // Fire an action to allow other methods to hook in and run stuff
              // when this plugin is activated...
-             do_action( 'plugin_text_domain/activation_hook' );
+             do_action( '{{plugin_text_domain}}/activation_hook' );
          }
 
          /**
@@ -121,7 +121,7 @@ if( ! class_exists( 'plugin_namespace' ) ) :
          public function deactivation_hook() {
              // Fire an action to allow other methods to hook in and run stuff
              // when this plugin is deactivated...
-             do_action( 'plugin_text_domain/deactivation_hook' );
+             do_action( '{{plugin_text_domain}}/deactivation_hook' );
          }
 
          /**
@@ -136,7 +136,7 @@ if( ! class_exists( 'plugin_namespace' ) ) :
 
              // Fire an action to allow other methods to hook in and run stuff
              // when this plugin is initialized...
-             do_action( 'plugin_text_domain/init' );
+             do_action( '{{plugin_text_domain}}/init' );
          }
 
          /**
@@ -145,7 +145,7 @@ if( ! class_exists( 'plugin_namespace' ) ) :
          public function plugin_path() {
              // Fire a filter to allow other methods to hook in and modify the
              // path to this plugin...
-             return apply_filters( 'plugin_text_domain/plugin_path', $this->plugin_path );
+             return apply_filters( '{{plugin_text_domain}}/plugin_path', $this->plugin_path );
          }
 
          /**
@@ -154,14 +154,14 @@ if( ! class_exists( 'plugin_namespace' ) ) :
          public function plugin_url() {
              // Fire a filter to allow other methods to hook in and modify the
              // url to this plugin...
-             return apply_filters( 'plugin_text_domain/plugin_url', $this->plugin_url );
+             return apply_filters( '{{plugin_text_domain}}/plugin_url', $this->plugin_url );
          }
 
          /**
           * Sets the text domain with the plugin translated into other languages.
           */
          public function load_text_domain() {
-             load_plugin_textdomain( 'plugin_text_domain', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+             load_plugin_textdomain( '{{plugin_text_domain}}', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
          }
 
          public function load_class( $classname, $filename = false, $params = null, $prop = true ) {
@@ -212,7 +212,7 @@ if( ! class_exists( 'plugin_namespace' ) ) :
 
              // Fire an action to allow other methods to hook in and load in
              // additional dependencies
-             do_action( 'plugin_text_domain/load_dependencies' );
+             do_action( '{{plugin_text_domain}}/load_dependencies' );
          }
 
      }
@@ -223,14 +223,14 @@ if( ! class_exists( 'plugin_namespace' ) ) :
       * Note: To use any reference to the plugin from outside the plugin_namespace
       * namespace, use the following statement at the top of your file:
       *
-      *     use function plugin_namespace\plugin as plugin_namespace;
+      *     use function {{plugin_namespace}}\plugin as {{plugin_namespace}};
       *
-      * You can then invoke the plugin instance using `plugin_namespace()` and
+      * You can then invoke the plugin instance using `{{plugin_namespace}}()` and
       * access any public methods from the global namespace.
-      * @return null|plugin_namespace
+      * @return null|{{plugin_namespace}}
       */
      function plugin() {
-         return plugin_namespace::instance();
+         return {{plugin_namespace}}::instance();
      }
 
      // Initialize the plugin...
