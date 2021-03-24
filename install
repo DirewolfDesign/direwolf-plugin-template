@@ -1,0 +1,184 @@
+<?php
+/**
+ * Direwolf Design Plugin Template Installer
+ * This file generates the dynamic code for the plugin template files.
+ * Run this file using PHP from the command line as follows:
+ *  `php install`
+ * You will be prompted for all required environment variables and the
+ * installer will handle deploying them throughout the project.
+ *
+ * PHP version 7.2
+ *
+ * @category  DirewolfDesign
+ * @package   PluginTemplate
+ * @author    DirewolfDesign <developers@direwolfdesign.co>
+ * @copyright 2021 (c) Direwolf Design
+ * @license   MIT <http://opensource.org/licenses/MIT>
+ * @version   GIT: $Id$
+ * @link      https://github.com/DirewolfDesign
+ */
+
+/** DEFINE SCRIPT VARIABLES **/
+$thisDir = dirname( __FILE__ );
+$targetDir = dirname( $thisDir );
+
+
+/** OUTPUT INSTALLER HEADER INFO **/
+
+echo "*****************************************" . "\n";
+echo "Direwolf Design Plugin Template Installer" . "\n";
+echo "\n";
+echo "© 2021 - Direwolf Design" . "\n";
+echo "*****************************************" . "\n";
+echo "\n";
+
+
+/** INSTALLER VARIABLES **/
+
+$params = array(
+    'plugin_name'           => 'Test Plugin',
+    'plugin_description'    => 'Just a test',
+    'plugin_version'        => '0.1.0',
+    'plugin_author'         => 'Direwolf Design',
+    'plugin_author_email'   => 'developers@direwolfdesign.co',
+    'plugin_author_uri'     => 'https://direwolfdesign.co',
+    'plugin_license'        => 'GNU GPLv3 or later',
+    'plugin_license_uri'    => 'https://www.gnu.org/licenses/gpl-3.0.en.html',
+    'plugin_text_domain'    => 'test-plugin',
+    'plugin_namespace'      => ''
+);
+
+
+/** INSTALLER QUESTIONS **/
+
+$questions = array(
+    'plugin_name'           => 'Enter the name of your plugin',
+    'plugin_description'    => 'Enter a description for your plugin',
+    'plugin_version'        => 'Enter a version number for your plugin',
+    'plugin_author'         => 'Enter the plugin author name',
+    'plugin_author_email'   => 'Enter the plugin author email address',
+    'plugin_author_uri'     => 'Enter the plugin author URL',
+    'plugin_license'        => 'Enter the license for the plugin',
+    'plugin_license_uri'    => 'Enter the license URL for the plugin',
+    'plugin_text_domain'    => 'Enter the text domain for the plugin',
+    // 'plugin_namespace'      => 'Enter a namespace for the plugin'
+);
+
+
+/** STEP 1 - ENVIRONMENT SETUP **/
+
+echo "STEP 1 - ENVIRONMENT SETUP" . "\n";
+echo "*****************************************" . "\n";
+echo "You will be prompted to enter the required" ."\n";
+echo "environment variables in order to build" .   "\n";
+echo "your plugin." .                              "\n";
+echo "*****************************************" . "\n";
+
+
+// Loop through each question and store the input text as the
+// property value in the $params array.
+foreach( $questions as $propName => $question ) :
+    echo "$question: ";
+    $handle = fopen("php://stdin", "r");
+    $line = fgets($handle);
+    if( trim( $line ) && ! is_null( trim( $line ) ) ) $params[$propName] = $line;
+    fclose( $handle );
+endforeach;
+
+// We should sanitize some of the input data here to make sure it matches the expected format
+$params['plugin_name'] = ucwords( $params['plugin_name'] );
+$params['plugin_text_domain'] = strtolower( str_replace( ' ', '-', $params['plugin_text_domain'] ) );
+
+// Generate a plugin namespace from the plugin name
+$params['plugin_namespace'] = str_replace( ' ', '', $params['plugin_name'] );
+
+// Generate a plugin directory name from the plugin text-domain
+$dirname = $params['plugin_text_domain'];
+$pluginDir = "$targetDir/$dirname";
+
+/** STEP 2 - INSTALLATION **/
+
+echo "STEP 2 - PLUGIN INSTALLATION" . "\n";
+echo "*****************************************" .  "\n";
+echo "Your plugin files will now be written using". "\n";
+echo "your selected options." .                     "\n";
+echo "Please be patient, this might take a minute". "\n";
+echo "or 2 to complete." .                          "\n";
+echo "*****************************************" .  "\n";
+
+// CREATE PLUGIN DIRECTORY
+print( "\n" . "• Creating Plugin Directory " );
+try {
+    mkdir( $pluginDir, 0755 );
+    print( "... SUCCESS" . "\n" );
+} catch( Exception $e ) {
+    print( "... FAILED" . "\n\n" );
+    print( "Error: Process failed. Unable to create plugin directory. Please ensure the parent directory is writeable." );
+}
+
+// Setup base files array
+$files = [
+    'plugin.php',
+    'uninstall.php',
+    'vendor/date_i18n/date_i18n.js'
+];
+
+// Class files
+foreach( glob( 'classes/*.php' ) as $filename )
+    $files[] = $filename;
+
+// Library files
+foreach( glob( 'library/**/*.php') as $filename )
+    $files[] = $filename;
+
+// Template files
+foreach( glob( 'templates/**/*' ) as $filename )
+    $files[] = $filename;
+
+// Component files
+foreach( glob( 'components/**/*' ) as $filename )
+    $files[] = $filename;
+
+// Language files
+foreach( glob( 'languages/**/*' ) as $filename )
+    $files[] = $filename;
+
+// Asset files
+foreach( glob( 'assets/**/**/*' ) as $filename )
+    $files[] = $filename;
+
+//print_r( $files );
+
+// CREATE NEW PLUGIN FILES
+
+// Loop through the array of files and copy them to their new directory after
+// parsing the content and replacing any replacement strings with the passed in
+// $params.
+foreach( $files as $filepath ) :
+    $contents = file_get_contents( "$thisDir/$filepath" );
+
+    // We should replace the contents of the file using preg_replace_all
+    // using our parameters array as a key => value pair to generate the plugin
+    $replace_keys = array_keys( $params );
+    foreach( $replace_keys as $i => $replace_key ) {
+        // Update to fix incorrect replacement keys. We now wrap all replacement
+        // keys in {{ and }} to avoid early replacements.
+        $replace_keys[ $i ] = "/\{\{$replace_key\}\}/";
+    }
+
+    $replace_values = array_values( $params );
+
+    $contents = preg_replace( $replace_keys, $replace_values, $contents );
+
+    // Make sure the required directory path exists
+    $dirPath = dirname( "$pluginDir/$filepath" );
+
+    // If the directory doesn't exist, we need to create it first.
+    // Pass in `true` here to recursively create the directory.
+    if( ! is_dir( "$dirPath" ) ) mkdir( "$dirPath", 0755, true );
+
+    // Write the new file
+    $fh = fopen( "$pluginDir/$filepath", "w" );
+    fwrite( $fh, $contents );
+    fclose( $fh );
+endforeach;
