@@ -60,8 +60,7 @@ $questions = array(
     'plugin_author_uri'     => 'Enter the plugin author URL',
     'plugin_license'        => 'Enter the license for the plugin',
     'plugin_license_uri'    => 'Enter the license URL for the plugin',
-    'plugin_text_domain'    => 'Enter the text domain for the plugin',
-    // 'plugin_namespace'      => 'Enter a namespace for the plugin'
+    'plugin_text_domain'    => 'Enter the text domain for the plugin'
 );
 
 
