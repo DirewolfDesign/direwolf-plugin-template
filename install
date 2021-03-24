@@ -36,15 +36,15 @@ echo "\n";
 /** INSTALLER VARIABLES **/
 
 $params = array(
-    'plugin_name'           => 'Test Plugin',
-    'plugin_description'    => 'Just a test',
+    'plugin_name'           => '',
+    'plugin_description'    => '',
     'plugin_version'        => '0.1.0',
-    'plugin_author'         => 'Direwolf Design',
-    'plugin_author_email'   => 'developers@direwolfdesign.co',
-    'plugin_author_uri'     => 'https://direwolfdesign.co',
+    'plugin_author'         => '',
+    'plugin_author_email'   => '',
+    'plugin_author_uri'     => '',
     'plugin_license'        => 'GNU GPLv3 or later',
     'plugin_license_uri'    => 'https://www.gnu.org/licenses/gpl-3.0.en.html',
-    'plugin_text_domain'    => 'test-plugin',
+    'plugin_text_domain'    => '',
     'plugin_namespace'      => ''
 );
 
@@ -54,12 +54,12 @@ $params = array(
 $questions = array(
     'plugin_name'           => 'Enter the name of your plugin',
     'plugin_description'    => 'Enter a description for your plugin',
-    'plugin_version'        => 'Enter a version number for your plugin',
+    'plugin_version'        => 'Enter a version number for your plugin (leave blank for 0.1.0)',
     'plugin_author'         => 'Enter the plugin author name',
     'plugin_author_email'   => 'Enter the plugin author email address',
     'plugin_author_uri'     => 'Enter the plugin author URL',
-    'plugin_license'        => 'Enter the license for the plugin',
-    'plugin_license_uri'    => 'Enter the license URL for the plugin',
+    'plugin_license'        => 'Enter the license for the plugin (leave blank for GNU GPLv3 or higher)',
+    'plugin_license_uri'    => 'Enter the license URL for the plugin (leave blank for GNU GPLv3)',
     'plugin_text_domain'    => 'Enter the text domain for the plugin'
 );
 
@@ -80,7 +80,7 @@ foreach( $questions as $propName => $question ) :
     echo "$question: ";
     $handle = fopen("php://stdin", "r");
     $line = fgets($handle);
-    if( trim( $line ) && ! is_null( trim( $line ) ) ) $params[$propName] = $line;
+    if( trim( $line ) && ! is_null( trim( $line ) ) ) $params[$propName] = trim( $line );
     fclose( $handle );
 endforeach;
 
@@ -97,7 +97,7 @@ $pluginDir = "$targetDir/$dirname";
 
 /** STEP 2 - INSTALLATION **/
 
-echo "STEP 2 - PLUGIN INSTALLATION" . "\n";
+echo "\n" . "STEP 2 - PLUGIN INSTALLATION" .        "\n";
 echo "*****************************************" .  "\n";
 echo "Your plugin files will now be written using". "\n";
 echo "your selected options." .                     "\n";
@@ -106,7 +106,30 @@ echo "or 2 to complete." .                          "\n";
 echo "*****************************************" .  "\n";
 
 // CREATE PLUGIN DIRECTORY
-print( "\n" . "• Creating Plugin Directory " );
+
+$continue = false;
+
+// Check for existence of the plugin directory...
+if( is_dir( $pluginDir ) ) {
+    // The directory already exists, let's prompt the user for overwrite...
+    echo "\n" . "Warning: A plugin already exists at $pluginDir." . "\n";
+    echo "Would you like to overwrite this plugin with your new options? This cannot be undone!" . "\n";
+    echo "\n" . "Overwrite previous plugin directory? (yes/no): ";
+
+    $handle = fopen("php://stdin", "r");
+    $line = fgets($handle);
+    $continue = trim( $line ) && trim( $line ) == 'yes';
+    fclose( $handle );
+} else { $continue = true; }
+
+
+// If the user chooses not to continue, print out an exit message and halt execution
+if( ! $continue ) {
+    echo "\n" . "Execution terminated by user input." . "\n";
+    exit; // End here...
+}
+
+echo "\n" . "• Creating Plugin Directory ";
 try {
     mkdir( $pluginDir, 0755 );
     print( "... SUCCESS" . "\n" );
@@ -146,8 +169,6 @@ foreach( glob( 'languages/**/*' ) as $filename )
 foreach( glob( 'assets/**/**/*' ) as $filename )
     $files[] = $filename;
 
-//print_r( $files );
-
 // CREATE NEW PLUGIN FILES
 
 // Loop through the array of files and copy them to their new directory after
@@ -181,3 +202,24 @@ foreach( $files as $filepath ) :
     fwrite( $fh, $contents );
     fclose( $fh );
 endforeach;
+
+/** STEP 3 - COMPLETE **/
+
+echo "\n" . "STEP 3 - INSTALLATION COMPLETE" .      "\n";
+echo "*****************************************" .  "\n";
+echo "Your new plugin is ready to go!".             "\n";
+echo "You can find your new plugin details below.". "\n";
+echo "Have fun building!" .                         "\n";
+echo "*****************************************" .  "\n";
+
+echo "\n"; // Newline
+
+echo "Plugin Name: {$params['plugin_name']}" . "\n";
+echo "Plugin Namespace: {$params['plugin_namespace']}" . "\n";
+echo "Plugin Directory: {$pluginDir}" . "\n";
+
+echo "\n"; // Newline
+
+echo "Thank you for using the Direwolf Design Plugin Template!" . "\n";
+echo "For docs, updates and issues, please see our GitHub repo at" . "\n";
+echo "https://github.com/DirewolfDesign/direwolf-plugin-template" . "\n";
