@@ -26,12 +26,12 @@ namespace {{plugin_namespace}};
 
 if( ! defined( 'ABSPATH' ) ) wp_die( 'End of Line, Man' );
 
-if( ! class_exists( '{{plugin_namespace}}' ) ) :
+if( ! class_exists( '\\{{plugin_namespace}}\\Plugin' ) ) :
 
     /**
      * Main Plugin Class
      */
-     class {{plugin_namespace}} {
+     class Plugin {
 
          /**
           * The single class instance.
@@ -85,6 +85,11 @@ if( ! class_exists( '{{plugin_namespace}}' ) ) :
           * Method call override
           * Allows us to call dynamically added class methods as if they were
           * predefined, so we can add some methods for calling subclasses
+          *
+          * @param  string  $method
+          * @param  mixed   $params
+          *
+          * @return null|callable
           */
          public function __call( $method, $params ) {
              // If a callable method exists, just go ahead and run it...
@@ -132,7 +137,7 @@ if( ! class_exists( '{{plugin_namespace}}' ) ) :
              $this->plugin_url  = plugin_dir_url( __FILE__ );
 
              $this->load_text_domain();
-             $this->include_dependencies();
+             $this->_include_dependencies();
 
              // Fire an action to allow other methods to hook in and run stuff
              // when this plugin is initialized...
@@ -164,8 +169,44 @@ if( ! class_exists( '{{plugin_namespace}}' ) ) :
              load_plugin_textdomain( '{{plugin_text_domain}}', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
          }
 
+         /**
+          * Load a core class and optionally assign it to a property.
+          *
+          * @param  string          $classname
+          * @param  string          $filename   (optional)
+          * @param  array|null      $params     (optional)
+          * @param  string|bool     $prop       (optional)
+          *
+          * @access private
+          */
+         private function _load_core_class( $classname, $filename = false, $params = null, $prop = true ) {
+             if( ! $filename ) $filename = strtolower( str_replace( '_', '-', $classname ) );
+
+             // Make sure `$classname` contains the namespace path
+             if( ! strstr( $classname, '{{plugin_namespace}}') )
+                $classname = "{{plugin_namespace}}\\$classname";
+
+             // If the file exists, load it and assign the class to a new property
+             if( file_exists( $this->plugin_path() . "/classes/core/class-$filename.php" ) ) :
+                 require_once $this->plugin_path() . "/classes/core/class-$filename.php";
+                 if( $prop ) $this->_register_class_prop( $classname, $params, $prop );
+             endif;
+         }
+
+         /**
+          * Load a class and optionally assign it to a property.
+          *
+          * @param  string          $classname
+          * @param  string          $filename   (optional)
+          * @param  array|null      $params     (optional)
+          * @param  string|bool     $prop       (optional)
+          */
          public function load_class( $classname, $filename = false, $params = null, $prop = true ) {
              if( ! $filename ) $filename = strtolower( str_replace( '_', '-', $classname ) );
+
+             // Make sure `$classname` contains the namespace path
+             if( ! strstr( $classname, '{{plugin_namespace}}') )
+                $classname = "{{plugin_namespace}}\\$classname";
 
              // Check for existence of the class file...
              if( file_exists( $this->plugin_path() . "/classes/class-$filename.php" ) ) :
@@ -174,41 +215,46 @@ if( ! class_exists( '{{plugin_namespace}}' ) ) :
                  // and be stored in the `/classes` directory.
                  require_once $this->plugin_path() . "/classes/class-$filename.php";
 
-                 // If the property name is set to a string, go ahead and set the
-                 // property. We'll assume the developer knows that properties can
-                 // only contain letters & underscores...
-                 if( is_string( $prop ) ) {
-                     $this->$prop = new $classname( $params );
-                     // Create an anonymous function that returns the class instance
-                     $this->methods[ $prop ] = function() { return $this->$prop; }
-                 }
-
-                 // If $prop is `true`, generate a property name from the provided
-                 // $classname parameter.
-                 elseif( $prop ) {
-                     // We can safely use the lower case classname as the property
-                     // name as classes can only contain underscores, not dashes
-                     // or spaces.
-                     $propname = strtolower( $classname );
-                     $this->$propname = new $classname( $params );
-                     // Create an anonymous function that returns the class instance
-                     $this->methods[ $propname ] = function() { return $this->$propname; }
-                 }
+                 // Assign the class instance to a new property
+                 if( $prop ) $this->_register_class_prop( $classname, $params, $prop );
              endif;
          }
 
          /**
-          * Set plugin Dependencies.
+          * Register a class as a property.
+          *
+          * @param  string          $classname
+          * @param  array|null      $params
+          * @param  string|bool     $prop
+          *
+          * @access private
           */
-         private function include_dependencies() {
-             $this->load_class( 'Admin' );
-             $this->load_class( 'Icons' );
-             $this->load_class( 'Controls' );
-             $this->load_class( 'Blocks' );
-             $this->load_class( 'Templates' );
-             $this->load_class( 'Tools' );
-             $this->load_class( 'Rest' );
-             $this->load_class( 'Force_Gutenberg' );
+         private function _register_class_prop( $classname, $params = null, $prop = true ) {
+             // If the property name is set to `true`, generate a property name
+             // from the class name.
+             if( is_bool( $prop ) ) $prop = strtolower( $classname );
+
+             // Assign the class instance to a new parameter
+             $this->$prop = new $classname( $params );
+
+             // Create an anonymous function that returns the class instance
+             $this->plugin_methods[ $prop ] = function() { return $this->$prop; };
+         }
+
+         /**
+          * Set plugin Dependencies.
+          *
+          * @access private
+          */
+         private function _include_dependencies() {
+             $this->_load_core_class( 'Admin' );
+             // $this->load_class( 'Icons' );
+             // $this->load_class( 'Controls' );
+             // $this->load_class( 'Blocks' );
+             // $this->load_class( 'Templates' );
+             // $this->load_class( 'Tools' );
+             // $this->load_class( 'Rest' );
+             // $this->load_class( 'Force_Gutenberg' );
 
              // Fire an action to allow other methods to hook in and load in
              // additional dependencies
@@ -227,10 +273,11 @@ if( ! class_exists( '{{plugin_namespace}}' ) ) :
       *
       * You can then invoke the plugin instance using `{{plugin_namespace}}()` and
       * access any public methods from the global namespace.
-      * @return null|{{plugin_namespace}}
+      *
+      * @return null|{{plugin_namespace}}\Plugin
       */
      function plugin() {
-         return {{plugin_namespace}}::instance();
+         return Plugin::instance();
      }
 
      // Initialize the plugin...
