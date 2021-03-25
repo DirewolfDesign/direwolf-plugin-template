@@ -69,7 +69,7 @@ class Admin {
             esc_html__( '{{plugin_name}}', '{{plugin_text_domain}}' ),  // $page_title
             esc_html__( '{{plugin_name}}', '{{plugin_text_domain}}' ),  // $menu_title
             'manage_options',                                           // $capability
-            '{{plugin_text_domain}}'
+            '{{plugin_text_domain}}'                                    // $menu_slug
         );
 
         // Fire an action to allow other methods to hook in and run stuff
@@ -129,11 +129,11 @@ class Admin {
 
         // Add the Direwolf Plugin Template documentation link to the menu
         $this->add_submenu_page(
-            '{{plugin_text_domain}}',
-            esc_html__( 'Documentation', 'test-plugin' ),                 // $page_title
-            esc_html__( 'Documentation', 'test-plugin' ),                 // $menu_title
-            'manage_options',                                             // $capability
-            'https://github.com/DirewolfDesign/direwolf-plugin-template/wiki'
+            '{{plugin_text_domain}}',                                               // $parent_slug
+            esc_html__( 'Documentation', 'test-plugin' ),                           // $page_title
+            esc_html__( 'Documentation', 'test-plugin' ),                           // $menu_title
+            'manage_options',                                                       // $capability
+            'https://github.com/DirewolfDesign/direwolf-plugin-template/wiki'       // $menu_slug
         );
 
         // Fire an action to allow other methods to hook in and run stuff
