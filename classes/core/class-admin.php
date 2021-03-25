@@ -27,6 +27,12 @@ class Admin {
     public $toplevel_pages = array();
 
     /**
+     * Plugin External Menu Pages
+     * @var array $external_menu_pages
+     */
+    public $external_menu_pages = array();
+
+    /**
      * Plugin Post Types
      * @var array $post_types
      */
