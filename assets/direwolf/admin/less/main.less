@@ -1,1 +1,54 @@
 // out: ../css/style.min.css, compress: true, autoprefixer: defaults
+
+.dw-admin-toolbar {
+    position:relative;
+
+    background-color:white;
+    margin-left:-20px;
+    padding:0px 20px;
+
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    border-bottom:1px solid #d7dbde;
+
+    h2 {
+        display:flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin:0;
+        font-size: 14px;
+        line-height: 2.57143;
+        padding:5px 0;
+
+        img { margin-right: 10px; }
+    }
+
+    .dw-admin-tabs {
+        display:flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-left:10px;
+
+        .dw-admin-toolbar-tab {
+            padding:5px 10px;
+            text-decoration: none;
+            margin:0 2px;
+            font-size:14px;
+            line-height:2.57143;
+            color:inherit;
+
+            &:hover, &:focus {
+                color: #007cba;
+            }
+        }
+
+        .is-active {
+            padding-bottom: 2px;
+            border-bottom: #007cba solid 3px;
+            color:#1d2327;
+            pointer-events: none;
+        }
+    }
+}
