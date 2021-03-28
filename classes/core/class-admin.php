@@ -431,7 +431,7 @@ class Admin {
              }
          }
 
-         return $tabs;
+         return apply_filters( '{{plugin_text_domain/admin_tabs}}', $tabs );
      }
 
 }
