@@ -388,4 +388,50 @@ class Admin {
          if( file_exists( $toolbar_path ) ) include( $toolbar_path );
      }
 
+     /**
+      * Generate Admin Tabs
+      * Creates a list of tabs to be added to the Admin Page Toolbar
+      *
+      * @param  string  $parent_slug
+      *
+      * @return array
+      */
+     private function _generate_admin_tabs( $parent_slug ) {
+         global $submenu, $submenu_file, $plugin_page;
+
+         $tabs = array();
+
+         // Generate array of navigation items.
+         if ( isset( $submenu[ $parent_slug ] ) ) {
+             foreach ( $submenu[ $parent_slug ] as $i => $sub_item ) {
+
+                 // Check user can access page.
+                 if ( ! current_user_can( $sub_item[1] ) ) continue;
+
+                 // Ignore "Add New".
+                 if ( strstr( 'post-new.php', $sub_item[2] ) ) continue;
+
+                 // Define tab.
+                 $tab = array(
+                     'text' => $sub_item[0],
+                     'url'  => $sub_item[2],
+                 );
+
+                 // Detect active state.
+                 if ( $submenu_file === $sub_item[2] || $plugin_page === $sub_item[2] ) {
+                     $tab['is_active'] = true;
+                 }
+
+                 // Special case for "Add New" page.
+                 if ( 0 === $i && strstr( $submenu_file, 'post-new.php' ) ) {
+                     $tab['is_active'] = true;
+                 }
+
+                 $tabs[] = $tab;
+             }
+         }
+
+         return $tabs;
+     }
+
 }
