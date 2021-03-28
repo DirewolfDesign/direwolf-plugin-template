@@ -2,7 +2,7 @@
 
 When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
 
-Please note we have a code of conduct, please follow it in all your interactions with the project.
+Please note we have a [code of conduct](https://github.com/DirewolfDesign/direwolf-plugin-template/blob/master/CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
 
 ---
 
@@ -14,7 +14,7 @@ Update the README.md with details of changes to the interface, this includes new
 
 Increase the version numbers in any examples files and the README.md to the new version that this Pull Request would represent. The versioning scheme we use is [SemVer](https://semver.org/).
 
-Once yur code has been reviewed, it will be merged by us if it passes all requirements.
+Once your code has been reviewed, it will be merged by us if it passes all requirements.
 
 ## Code of Conduct
 
