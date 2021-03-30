@@ -56,6 +56,8 @@ class Icons {
 
     /**
      * Get all available categories and icons.
+     *
+     * @return array
      */
     private function _get_icons() {
         $dir = plugin()->plugin_path() . $this->$iconpath;
@@ -80,12 +82,15 @@ class Icons {
     }
 
     /**
-     * Get all available icons
+     * Get all available icons, optionally from specified category
+     *
+     * @param   string  $category
      *
      * @return array
      */
-    public static function get_all() {
-
+    public function get_all( $category = null ) {
+        $icons = $this->use_categories && $category ? $this->icons[ $category ] : $this->icons;
+        return apply_filters( "{{plugin_text_domain}}/icons", $icons, $category, $this->use_categories );
     }
 
     /**
@@ -99,7 +104,7 @@ class Icons {
      * doesn't exist.
      */
     public function get( $icon, $category = null ) {
-        $icon = $this->use_categories ? $this->icons[ $category ][ $icon ];
+        $icon = $this->use_categories ? $this->icons[ $category ][ $icon ] : $this->icons[ $icon ];
         return apply_filters( "{{plugin_text_domain}}/icons/$icon", $this->icons[ $icon ], $category, $this->use_categories );
     }
 }
