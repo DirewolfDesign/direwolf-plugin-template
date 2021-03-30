@@ -351,7 +351,7 @@ class Admin {
      public function in_admin_header() {
          if( ! function_exists( 'get_current_screen' ) ) return;
 
-         $show_toolbar = apply_filters( '{{plugin_text_domain/show_admin_toolbar}}', true );
+         $show_toolbar = apply_filters( '{{plugin_text_domain}}/show_admin_toolbar', true );
          if( ! $show_toolbar ) return;
 
          $screen = get_current_screen();
@@ -369,7 +369,7 @@ class Admin {
          $parent_slug = $screen->parent_base;
          $tabs = array();
 
-         $tabs = apply_filters( '{{plugin_text_domain}}/admin_toolbar_tabs', $tabs );
+         $tabs = $this->_generate_admin_tabs( $parent_slug );
 
          // Bail early if set to false or empty.
          if ( ! $tabs || empty( $tabs ) ) return;
@@ -431,7 +431,7 @@ class Admin {
              }
          }
 
-         return apply_filters( '{{plugin_text_domain/admin_tabs}}', $tabs );
+         return apply_filters( '{{plugin_text_domain}}/admin_toolbar_tabs', $tabs, $parent_slug );
      }
 
 }
